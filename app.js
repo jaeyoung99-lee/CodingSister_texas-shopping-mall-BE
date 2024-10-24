@@ -12,7 +12,9 @@ app.use(bodyParser.json()); // req.body가 객체로 인식되게 해줌
 
 app.use("/api", indexRouter);
 
-const mongoURI = process.env.LOCAL_DB_ADDRESS;
+// const mongoURI = process.env.LOCAL_DB_ADDRESS;
+const mongoURI = process.env.MONGODB_URI_PROD;
+
 mongoose
   .connect(mongoURI)
   .then(() => {
