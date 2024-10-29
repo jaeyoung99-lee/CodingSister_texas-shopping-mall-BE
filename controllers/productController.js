@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const PAGE_SIZE = 5;
 
 const productController = {};
 
@@ -43,8 +44,20 @@ productController.getProducts = async (req, res) => {
         }
       : {};
     let query = Product.find(cond);
+    let response = { status: "success" };
+    if (page) {
+      query.skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
+      // 최종 몇 개 페이지
+      // 전체 페이지 개수 = 전체 데이터 개수 / 페이지 사이즈
+      // 데이터가 총 몇 개 있는지
+      const totalItemNum = await Product.find(cond).countDocuments();
+      // 데이터 총 개수 / 페이지 사이즈
+      const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
+      response.totalPageNum = totalPageNum;
+    }
     const productList = await query.exec();
-    res.status(200).json({ status: "success", data: productList });
+    response.data = productList;
+    res.status(200).json(response);
   } catch (error) {
     res.status(400).json({ status: "fail", error: error.message });
   }
