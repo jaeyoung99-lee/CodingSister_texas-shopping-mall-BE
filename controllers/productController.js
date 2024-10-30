@@ -1,5 +1,5 @@
 const Product = require("../models/Product");
-const PAGE_SIZE = 5;
+const DEFAULT_PAGE_SIZE = 5;
 
 const productController = {};
 
@@ -37,7 +37,8 @@ productController.createProduct = async (req, res) => {
 
 productController.getProducts = async (req, res) => {
   try {
-    const { page, name } = req.query;
+    const { page, name, limit } = req.query;
+    const PAGE_SIZE = parseInt(limit) || DEFAULT_PAGE_SIZE; // 쿼리의 limit이 없으면 기본값인 5 사용
     const cond = name
       ? {
           name: { $regex: name, $options: "i" }, // $options: "i" 사용하여 대소문자 구분 안하게 해줌
