@@ -37,7 +37,7 @@ productController.createProduct = async (req, res) => {
 
 productController.getProducts = async (req, res) => {
   try {
-    const { page, name, limit } = req.query;
+    const { page, name, limit, sort, order } = req.query;
     const PAGE_SIZE = parseInt(limit) || DEFAULT_PAGE_SIZE; // 쿼리의 limit이 없으면 기본값인 5 사용
     const cond = name
       ? {
@@ -45,6 +45,11 @@ productController.getProducts = async (req, res) => {
         }
       : {};
     let query = Product.find(cond);
+
+    if (sort) {
+      query = query.sort({ [sort]: order === "desc" ? -1 : 1 }); // 내림차순 또는 오름차순 정렬
+    }
+
     let response = { status: "success" };
     if (page) {
       query.skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
