@@ -16,6 +16,15 @@ productController.createProduct = async (req, res) => {
       stock,
       status,
     } = req.body;
+
+    // SKU 중복 체크
+    const existingProduct = await Product.findOne({ sku });
+    if (existingProduct) {
+      return res
+        .status(400)
+        .json({ status: "fail", error: "SKU가 이미 존재합니다." });
+    }
+
     const product = new Product({
       sku,
       name,
