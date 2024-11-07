@@ -52,7 +52,7 @@ orderController.getOrder = async (req, res, next) => {
       },
     });
     const totalItemNum = await Order.find({ userId }).countDocuments();
-    const totalPageNum = Math.ceil(totalItemNum / 5);
+    const totalPageNum = Math.ceil(totalItemNum / 3);
     res.status(200).json({ status: "success", data: orderList, totalPageNum });
   } catch (error) {
     return res.status(400).json({ status: "fail", error: error.message });
@@ -81,11 +81,11 @@ orderController.getOrderList = async (req, res) => {
           select: "image name",
         },
       })
-      .skip((page - 1) * 5)
-      .limit(5);
+      .skip((page - 1) * 3)
+      .limit(3);
 
     const totalItemNum = await Order.find(cond).countDocuments();
-    const totalPageNum = Math.ceil(totalItemNum / 5);
+    const totalPageNum = Math.ceil(totalItemNum / 3);
 
     res.status(200).json({ status: "success", data: orderList, totalPageNum });
   } catch (error) {
