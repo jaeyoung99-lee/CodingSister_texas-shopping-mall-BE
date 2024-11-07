@@ -188,6 +188,7 @@ productController.checkItemListStock = async (itemList) => {
     itemList.map(async (item) => {
       const product = await Product.findById(item.productId);
       product.stock[item.size] -= item.qty;
+      product.markModified("stock");
       await product.save();
     })
   );
